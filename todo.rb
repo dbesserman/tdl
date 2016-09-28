@@ -78,8 +78,12 @@ end
 post '/lists/:number/destroy' do
   list_id = params[:number].to_i
   session[:lists].delete_at(list_id)
-  session[:success] = "The list has been deleted"
-  redirect '/lists'
+  if env["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest"
+    "/lists"
+  else
+    session[:success] = "The list has been deleted"
+    redirect '/lists'
+  end
 end
 
 # Deletes a doto from a list
@@ -88,8 +92,12 @@ post '/lists/:number/todos/:todo_index/destroy' do
   @list = load_list(list_id)
   todo_index = params[:todo_index].to_i
   @list[:todos].delete_at(todo_index)   
-  session[:success] = 'The todo has been deleted'
-  redirect "/lists/#{list_id}"
+  if env["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest"
+    status 204
+  else
+    session[:success] = 'The todo has been deleted'
+    redirect "/lists/#{list_id}"
+  end
 end
 
 # Add a new td to a list
