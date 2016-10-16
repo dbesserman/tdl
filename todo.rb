@@ -58,7 +58,7 @@ get "/lists/:number/edit" do
 end
 
 # Update an existing list
-post '/lists/:number/edit' do
+post '/lists/:number' do
   list_name = params[:list_name].strip
   list_id = params[:number].to_i
   @list = load_list(list_id)
